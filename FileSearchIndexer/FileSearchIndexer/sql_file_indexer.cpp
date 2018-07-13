@@ -5,6 +5,7 @@
 //  Created by Stephen James Tenniswood on 7/12/18.
 //  Copyright © 2018 Stephen James Tenniswood. All rights reserved.
 //
+#include <stdlib.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -29,7 +30,7 @@ void init_sql()
     
     /* Connect to database */
     if (!mysql_real_connect(conn, server,
-                            user, password, database, 0, NULL, 0)) {
+                            user, password, NULL, 0, NULL, 0)) {
         fprintf(stderr, "%s\n", mysql_error(conn));
         exit(1);
     }
@@ -42,12 +43,12 @@ void close_sql()
 
 void create_database()
 {
-    string query = "create database Files; use Files;";
+    string query = "create database Files;";
     /* send SQL query */
     if (mysql_query(conn, query.c_str() ))
     {
-        fprintf(stderr, "%s\n", mysql_error(conn));
-        exit(1);
+        //fprintf(stderr, "%s\n", mysql_error(conn));
+        //exit(1);
     }
 }
 void use_database()
@@ -77,8 +78,8 @@ void drop_table()
     
     if (mysql_query(conn, query.c_str() ))
     {
-        fprintf(stderr, "%s\n", mysql_error(conn));
-        exit(1);
+        //fprintf(stderr, "%s\n", mysql_error(conn));
+        //exit(1);
     }
 }
 
@@ -118,6 +119,6 @@ void print_results()
 {
     while ((row = mysql_fetch_row(result)))
     {
-        cout << row[3] << row[1] << endl;
+        cout << row[3] << "/" << row[1] << endl;
     }
 }

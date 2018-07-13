@@ -9,6 +9,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <string.h>
+#include <strings.h>
+
 #include <list>
 #include <sys/types.h>
 #include <dirent.h>
@@ -65,8 +68,12 @@ void capture_and_repeat()
     {
         // skip if "/." or "/.."
         size_t len = (*iter).length();
-        string sub1 = iter->substr(len-1, 1);
-        string sub2 = iter->substr(len-2, 2);
+	string sub1="";
+	string sub2="";
+	if (len>1)
+        	sub1 = iter->substr(len-1, 1);
+        if (len>2)
+		sub2 = iter->substr(len-2, 2);
         if ((sub1.compare(".")==0) || (sub2.compare("..")==0))
             continue;
         
@@ -89,30 +96,31 @@ void help()
 int main (int argc, char** argv )
 {
     init_sql();
-    
+    create_database();
+    use_database();
+
     // Process Arguments
     for (int i=0; i<argc; i++)
     {
+	//cout << "argument: " << argv[i] << endl;
         if ((strcmp(argv[i], "-h")==0) || (strcmp(argv[i], "help")==0))
             help();
 
         if (strcmp(argv[i], "-I")==0)
-            create_index = true;
-        
+		create_index = true;
         if (strcmp(argv[i], "-b")==0)
         {
             Path = argv[i+1];
             size_t len = Path.length();
-            if (Path[len-1]=='/')
-                Path.pop_back();
+            if (Path[len-1]=='/') {
+                    Path.erase(len - 1);
+			//Path.pop_back();
+		}
             cout << "Basepath = " << Path << endl;
         }
     }
     Filename = argv[argc-1];
     
-    //create_index = true;
-    //Path = "/Users/stephentenniswood/code";
-
     if (create_index)
     {
         drop_table();
